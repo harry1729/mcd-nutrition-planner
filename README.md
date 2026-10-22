@@ -86,7 +86,7 @@ node src/index.js --list-tools
 npm test
 ```
 
-17 个单元测试，覆盖边界条件：全员过敏、预算不足、饮品误作主食、券次数上限、拆单上限、过期券过滤等。
+33 个单元测试，覆盖边界条件：全员过敏、预算不足、饮品误作主食、券次数上限、拆单上限、过期券过滤、MCP 字段兼容等。
 
 ---
 
@@ -153,7 +153,8 @@ mcd-catering-planner/
 │   └── demo/
 │       └── sample-data.js    离线演示数据
 ├── test/
-│   └── solver.test.js        17 个单元测试
+│   ├── solver.test.js        求解器 17 个单元测试
+│   └── adapter.test.js       MCP 适配层 16 个单元测试
 ├── demo/
 │   └── sample-output.txt     演示输出样例
 ├── mcp-config.example.json   MCP 配置示例（仅环境变量占位符）

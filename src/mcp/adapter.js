@@ -83,6 +83,13 @@ export function normalizeCoupon(raw) {
   const type = pick(raw, ['type', 'couponType']) ?? (amount > 0 ? 'fixed' : 'discount');
   const rawPercent = toNumber(percent, 0);
 
+  // 折扣率归一化到 0~1：
+  //   0.85 / 85 均表示 8.5 折（付 85%）→ 0.85
+  //   8.5 / 8.5 表示"折后价占比 8.5%" 或 "打 8.5 折" 的另一种记法，
+  //   统一按"数值>1 时除以 100"处理，故8.5 视为 8.5% → 0.085。
+  //   注意：MCP 侧通常返回 0.85 或 85，此处主要防御异常值。
+  const normalizedPercent = rawPercent > 1 ? rawPercent / 100 : rawPercent;
+
   return {
     id: String(pick(raw, ['id', 'couponId', 'couponCode', 'code']) ?? name),
     name,
@@ -90,7 +97,7 @@ export function normalizeCoupon(raw) {
     amount,
     threshold,
     // 支持 0.85 或 85 两种表述，统一归一化为 0~1
-    percent: rawPercent > 1 ? rawPercent / 100 : rawPercent,
+    percent: normalizedPercent,
     maxDiscount: toNumber(pick(raw, ['maxDiscount', 'maxReduce', 'discountLimit']), 0),
     expireAt: pick(raw, ['expireAt', 'endTime', 'validUntil', 'expireDate', 'endDate']),
     raw,
