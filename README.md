@@ -37,6 +37,8 @@
 node src/index.js --demo --headcount 20 --budget 40
 ```
 
+演示使用**麦当劳 MCP 的真实菜单快照**（107 个餐品，2026-10-22 采集自深圳同方信息港餐厅，
+`demo/real-menu-snapshot.json`），评委可直接对照官方渠道核验价格，避免"编数据"的质疑。
 完整输出见 [`demo/sample-output.txt`](demo/sample-output.txt)：
 
 ```
@@ -70,11 +72,17 @@ export MCD_MCP_TOKEN=你的Token
 
 ```bash
 # 规划方案（试算，不下单）
-node src/index.js --plan --headcount 20 --budget 40 --address "深圳南山科技园"
+node src/index.js --plan --headcount 20 --budget 40 --city 深圳 --address 科技园
+
+# 直接指定门店编码
+node src/index.js --plan --headcount 20 --budget 40 --store-code 1420762
+
+# 企业团餐场景（beType=6，需企业身份预置）
+node src/index.js --plan --headcount 50 --budget 45 --city 深圳 --address 科技园 --catering
 
 # 规避过敏原与标签
 node src/index.js --plan --headcount 30 --budget 45 \
-  --address "上海张江" --exclude-allergen "乳制品,鱼" --exclude-tag "辣"
+  --city 上海 --address 张江 --exclude-allergen "乳制品,鱼" --exclude-tag "辣"
 
 # 查看服务端实时工具清单
 node src/index.js --list-tools
@@ -86,7 +94,7 @@ node src/index.js --list-tools
 npm test
 ```
 
-33 个单元测试，覆盖边界条件：全员过敏、预算不足、饮品误作主食、券次数上限、拆单上限、过期券过滤、MCP 字段兼容等。
+45 个单元测试，覆盖边界条件：全员过敏、预算不足、饮品误作主食、券次数上限、拆单上限、过期券过滤、MCP 字段兼容、营养表解析等。
 
 ---
 

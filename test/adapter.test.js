@@ -12,6 +12,7 @@ import {
   normalizeStore,
   normalizeStores,
   normalizeNutrition,
+  parseNutritionText,
   enrichNutrition,
 } from '../src/mcp/adapter.js';
 import { parseContent } from '../src/mcp/client.js';
@@ -133,12 +134,68 @@ test('parseContent：解析 JSON 文本', () => {
   assert.deepEqual(parseContent({ content: [{ type: 'text', text: '{"b":2}' }] }), { b: 2 });
 });
 
-test('parseContent：非JSON 文本降级为 raw', () => {
+test('parseContent：非JSON 文本返回原始字符串', () => {
   const out = parseContent({ content: [{ type: 'text', text: '查询成功' }] });
-  assert.equal(out.raw, '查询成功');
+  assert.equal(out, '查询成功');
 });
 
 test('parseContent：空输入返回 null', () => {
   assert.equal(parseContent(null), null);
   assert.equal(parseContent({}), null);
+});
+
+test('parseContent：非JSON 文本返回原始字符串（供营养表解析器使用）', () => {
+  const text = '中薯条,null,1210,289,4,12,38,165,18';
+  assert.equal(parseContent({ content: [{ type: 'text', text }] }), text);
+});
+
+test('解析营养纯文本：字段按"末尾7个数字"对齐', () => {
+  const rows = parseNutritionText('中薯条,null,1210,289,4,12,38,165,18');
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].name, '中薯条');
+  assert.equal(rows[0].kcal, 289);
+  assert.equal(rows[0].protein, 4);
+  assert.equal(rows[0].fat, 12);
+  assert.equal(rows[0].carbs, 38);
+  assert.equal(rows[0].sodium, 165);
+  assert.equal(rows[0].calcium, 18);
+});
+
+test('解析营养纯文本：多行批量解析', () => {
+  const text = [
+    '中薯条,null,1210,289,4,12,38,165,18',
+    '巨无霸,null,2146,513,27,26,42,961,171',
+    '可乐中杯,null,616,147,0,0,36,0,10',
+  ].join('\n');
+  const rows = parseNutritionText(text);
+  assert.equal(rows.length, 3);
+  assert.equal(rows[1].name, '巨无霸');
+  assert.equal(rows[1].protein, 27);
+  assert.equal(rows[2].kcal, 147);
+});
+
+test('解析营养纯文本：跳过格式非法的行', () => {
+  const text = '坏行,数据不足\n正常,null,1210,289,4,12,38,165,18\n\n';
+  const rows = parseNutritionText(text);
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].name, '正常');
+});
+
+test('归一化营养：兼容 {data: "<文本>"} 嵌套结构（真实返回形态）', () => {
+  const payload = { success: true, code: 200, data: '巨无霸,null,2146,513,27,26,42,961,171' };
+  const map = normalizeNutrition(payload);
+  assert.equal(map.size, 1);
+  assert.equal(map.get('巨无霸').kcal, 513);
+  assert.equal(map.get('巨无霸').protein, 27);
+});
+
+test('归一化营养：兼容对象数组形态', () => {
+  const map = normalizeNutrition({ foods: [{ name: '巨无霸', kcal: 513, protein: 27, sodium: 961 }] });
+  assert.equal(map.get('巨无霸').kcal, 513);
+});
+
+test('归一化营养：多层嵌套也能剥到数据层', () => {
+  const map = normalizeNutrition({ data: { data: '巨无霸,null,2146,513,27,26,42,961,171' } });
+  assert.equal(map.size, 1);
+  assert.equal(map.get('巨无霸').kcal, 513);
 });

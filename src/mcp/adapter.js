@@ -129,15 +129,92 @@ export function normalizeStores(payload) {
   return list.filter((x) => x && typeof x === 'object').map(normalizeStore);
 }
 
+/**
+ * 解析 list-nutrition-foods 返回的纯文本格式。
+ *
+ * 实测真实返回为字符串，格式：
+ *   名称,描述,能量kJ,能量kcal,蛋白质g,脂肪g,碳水g,钠mg,钙mg
+ * 每行一条，共约 6000+ 行。描述字段常为 null，故按"末尾8 个数字"对齐解析。
+ *
+ * 例：
+ *   中薯条,null,1210,289,4,12,38,165,18
+ *   巨无霸,null,2146,513,27,26,42,961,171
+ */
+export function parseNutritionText(text) {
+  if (typeof text !== 'string') return [];
+
+  const rows = [];
+  for (const line of text.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    const parts = trimmed.split(',');
+    if (parts.length < 9) continue;
+
+    const name = parts[0].trim();
+    if (!name) continue;
+
+    // 末 8 个字段为数值：kJ, kcal, 蛋白, 脂肪, 碳水, 钠, 钙（实际为 7 个）
+    // 稳妥做法：从右往左取 7 个数字，剩余部分为名称与描述
+    const nums = [];
+    let idx = parts.length - 1;
+    while (idx >= 0 && nums.length < 7) {
+      const v = Number(parts[idx]);
+      if (Number.isFinite(v)) {
+        nums.unshift(v);
+        idx--;
+      } else {
+        break;
+      }
+    }
+    if (nums.length < 7) continue;
+
+    const [kj, kcal, protein, fat, carbs, sodium, calcium] = nums;
+    rows.push({
+      name,
+      kcal: kcal || 0,
+      protein: protein || 0,
+      fat: fat || 0,
+      carbs: carbs || 0,
+      sodium: sodium || 0,
+      calcium: calcium || 0,
+      energyKj: kj || 0,
+    });
+  }
+  return rows;
+}
+
 /** 归一化营养数据并按名称建索引 */
 export function normalizeNutrition(payload) {
+  // 真实返回结构：{ success, code, message, data: "<纯文本表格>" }
+  // 需逐层剥壳，直到拿到字符串或对象数组
+  let p = payload;
+  for (let i = 0; i < 4; i++) {
+    if (p === null || p === undefined) break;
+    if (typeof p === 'string') break;
+    if (Array.isArray(p)) break;
+    if (!('data' in p) && !('foods' in p) && !('nutritions' in p) && !('list' in p)
+      && !('items' in p) && !('result' in p)) break;
+    p = p.data ?? p.foods ?? p.nutritions ?? p.list ?? p.items ?? p.result;
+  }
+
+  // 真实返回为纯文本
+  if (typeof p === 'string') {
+    const map = new Map();
+    for (const row of parseNutritionText(p)) {
+      map.set(row.name, row);
+    }
+    return map;
+  }
+
+  // 兼容对象数组形态
   const list = toArray(
-    pick(payload ?? {}, ['foods', 'nutritions', 'list', 'items', 'data', 'result']) ?? payload,
+    pick(p ?? {}, ['foods', 'nutritions', 'list', 'items', 'data', 'result']) ?? p,
   );
   const map = new Map();
   for (const raw of list) {
     if (!raw || typeof raw !== 'object') continue;
-    const name = String(pick(raw, ['name', 'foodName', 'itemName', 'title']) ?? '');
+    const name = String(pick(raw, ['name', 'foodName', 'itemName', 'title', 'productName']) ?? '');
     if (!name) continue;
     map.set(name, {
       kcal: toNumber(pick(raw, ['kcal', 'calorie', 'energy', 'energyKcal']), 0),

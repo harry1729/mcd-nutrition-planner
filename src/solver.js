@@ -10,7 +10,7 @@
  * 3. 拆单策略显式建模：麦当劳优惠券多为「每单限用一张」，允许拆单时可显著提升优惠率。
  */
 
-import { Plan } from './model.js';
+import { Plan, isMainCourse, isDrink } from './model.js';
 
 const round2 = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
 
@@ -259,16 +259,28 @@ export function solveCateringPlan(menu, coupons, input) {
     return { plans: [], best: null, diagnostics };
   }
 
-  const drinkItem = passed.find((i) => (i.tags ?? []).includes('饮料')) ?? null;
-  const mainItems = passed.filter((i) => i !== drinkItem);
+  const drinkItem = passed.find((i) => isDrink(i)) ?? null;
 
-  // 边界：饮料不可作为主食。若剔除饮料后无可选，说明整体不可行。
+  // 主食资格判定：真实菜单含大量非主食商品（酱料包、杯套等），
+  // 若不过滤，求解器可能选中 ¥3 的酱料包作为"主食"，产出荒谬方案。
+  const mainItems = passed.filter((i) => i !== drinkItem && isMainCourse(i));
+
+  // 被判定为非主食的商品记录原因，便于追溯
+  for (const item of passed) {
+    if (item === drinkItem || isMainCourse(item)) continue;
+    diagnostics.rejected.push({
+      code: item.code,
+      name: item.name,
+      reason: `非主食类商品（分类：${item.category ?? '未知'}）`,
+    });
+  }
+
   if (mainItems.length === 0) {
     diagnostics.feasibility = 'no_feasible_item';
     diagnostics.rejected.push({
       code: drinkItem?.code ?? 'N/A',
       name: drinkItem?.name ?? 'N/A',
-      reason: '仅有饮品，无可作为主食的餐品',
+      reason: '无可作为主食的餐品（仅有饮品或非主食商品）',
     });
     return { plans: [], best: null, alternatives: [], diagnostics };
   }

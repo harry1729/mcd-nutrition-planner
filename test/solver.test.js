@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { solveCateringPlan } from '../src/solver.js';
-import { headcountTier } from '../src/model.js';
+import { headcountTier, isMainCourse, isDrink } from '../src/model.js';
 
 const MENU = [
   { code: 'M1', name: '巨无霸套餐', price: 42, kcal: 720, protein: 28, sodium: 1150, tags: ['高蛋白'], allergens: ['小麦', '乳制品'], servings: 1, isCombo: true },
@@ -31,6 +31,54 @@ test('人数档位划分正确', () => {
   assert.equal(headcountTier(20).label, '中型会议');
   assert.equal(headcountTier(60).label, '大型会议');
   assert.equal(headcountTier(500).label, '部门级/全公司');
+});
+
+test('主食判定：真实菜单分类中的主食可识别', () => {
+  // 以下分类名取自麦当劳 MCP 真实返回
+  const mains = [
+    { name: '巨无霸', category: '巨无霸\n牛鱼肉堡' },
+    { name: '麦辣鸡腿堡', category: '鸡肉汉堡/卷' },
+    { name: '麦乐鸡5块', category: '蘸酱炸鸡' },
+    { name: '心形薯饼8块', category: '小食拼盘/多人餐' },
+    { name: '精选单人餐三件套', category: '精选单人餐' },
+    { name: '安格斯MAX厚牛堡', category: '安格斯MAX\n厚牛堡' },
+  ];
+  for (const item of mains) {
+    assert.equal(isMainCourse(item), true, `${item.name} 应识别为主食`);
+  }
+});
+
+test('主食判定：酱料等非主食被排除（真实 bug 回归）', () => {
+  // 真实 bug：曾把 ¥3 的"韩式烟熏芝士风味酱"选为20 人主食
+  const nonMains = [
+    { name: '韩式烟熏芝士风味酱', category: '小食甜品/其他' },
+    { name: '麦香鱼', category: '人气热卖' },
+  ];
+  assert.equal(isMainCourse(nonMains[0]), false, '酱料包不应作为主食');
+});
+
+test('主食判定：无分类时按名称启发式回落', () => {
+  assert.equal(isMainCourse({ name: '麦辣鸡腿汉堡三件套' }), true);
+  assert.equal(isMainCourse({ name: '板烧鸡腿堡' }), true);
+  assert.equal(isMainCourse({ name: '圆筒冰淇淋' }), false);
+});
+
+test('饮品判定：按分类与名称双重识别', () => {
+  assert.equal(isDrink({ name: '可乐中杯', category: '饮品' }), true);
+  assert.equal(isDrink({ name: '麦咖啡™', category: '麦咖啡™' }), true);
+  assert.equal(isDrink({ name: '雪碧中杯' }), true);
+  assert.equal(isDrink({ name: '巨无霸', category: '巨无霸/牛鱼肉堡' }), false);
+});
+
+test('求解器不把非主食商品选为主方案（真实 bug 回归）', () => {
+  const menu = [
+    { code: 'S1', name: '韩式烟熏芝士风味酱', price: 3, kcal: 60, protein: 1, sodium: 120, tags: [], category: '小食甜品/其他', allergens: [], servings: 1 },
+    { code: 'M1', name: '麦辣鸡腿汉堡三件套', price: 33.5, kcal: 485, protein: 24, sodium: 1208, tags: [], category: '鸡肉汉堡/卷', allergens: [], servings: 1 },
+  ];
+  const { best } = solveCateringPlan(menu, [], { headcount: 20, budgetPerPerson: 40 });
+  assert.ok(best, '应产出方案');
+  assert.equal(best.items[0].code, 'M1', `不应选酱料包，实际选了 ${best.items[0].name}`);
+  assert.equal(best.items[0].quantity, 20);
 });
 
 test('求解产出方案且人均不超预算', () => {
@@ -71,8 +119,8 @@ test('份数向上取整，不出现不足分', () => {
 
 test('单人份数场景：servings>1 时向上取整', () => {
   const menu = [
-    { code: 'C1', name: '双人分享装', price: 88, kcal: 1400, protein: 56, sodium: 2200, tags: ['分享'], servings: 2, allergens: [] },
-    { code: 'D1', name: '中可乐', price: 9, kcal: 140, protein: 0, sodium: 30, tags: ['饮料'], servings: 1 },
+    { code: 'C1', name: '双人分享装', price: 88, kcal: 1400, protein: 56, sodium: 2200, tags: ['分享'], category: '小食拼盘/多人餐', allergens: [], servings: 2 },
+    { code: 'D1', name: '中可乐', price: 9, kcal: 140, protein: 0, sodium: 30, tags: ['饮料'], category: '饮品', servings: 1 },
   ];
   const { best } = solveCateringPlan(menu, COUPONS, { headcount: 10, budgetPerPerson: 55 });
   const main = best.items.find((i) => i.code === 'C1');

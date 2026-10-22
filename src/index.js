@@ -14,7 +14,7 @@ import { planCatering } from './mcp/orchestrator.js';
 import { McdMcpClient } from './mcp/client.js';
 import { solveCateringPlan } from './solver.js';
 import { renderPlan, renderTrace } from './report/render.js';
-import { DEMO_MENU, DEMO_COUPONS, DEMO_STORE } from './demo/sample-data.js';
+import { DEMO_COUPONS, DEMO_STORE, loadRealMenu } from './demo/sample-data.js';
 
 function parseArgs(argv) {
   const args = {};
@@ -42,15 +42,22 @@ mcd-catering-planner — 企业团餐决策助手
 
 用法:
   node src/index.js --demo
-      离线演示，使用内置样例菜单与优惠券，无需 MCP Token
+      离线演示，使用麦当劳 MCP 真实菜单快照，无需 MCP Token
 
-  node src/index.js --plan --headcount <人数> --budget <人均预算> [--address <地址>] [--store <门店名>]
+  node src/index.js --plan --headcount <人数> --budget <人均预算> --city <城市> --address <地点关键词>
       实时规划，需先配置环境变量 MCD_MCP_TOKEN
+
+  node src/index.js --plan --headcount 20 --budget 40 --store-code 1420762
+      指定门店编码，跳过门店搜索
 
   node src/index.js --list-tools
       列出麦当劳 MCP Server 当前可用工具
 
 通用参数:
+  --city <城市>        门店搜索城市，如深圳
+  --address <关键词>    门店搜索地点关键词，如"科技园"
+  --store-code <编码>   直接指定门店编码
+  --catering           使用企业团餐场景（beType=6，需企业身份预置）
   --no-split          禁用拆单叠加用券
   --auto-bind         自动领取麦麦省券
   --exclude-allergen  规避过敏原，逗号分隔，如 小麦,乳制品
@@ -74,11 +81,12 @@ async function main() {
     const headcount = Number(args.headcount ?? 20);
     const budgetPerPerson = Number(args.budget ?? 40);
 
-    console.log('\n【离线演示模式】使用内置样例数据，未连接 MCP Server\n');
-    console.log(`门店：${DEMO_STORE.name} · ${DEMO_STORE.address}`);
+    console.log('\n【离线演示模式】使用麦当劳 MCP 真实菜单快照（2026-10-22 采集）\n');
+    console.log(`门店：${DEMO_STORE.name}`);
     console.log(`规模：${headcount} 人，人均预算 ¥${budgetPerPerson}\n`);
 
-    const { best, alternatives, diagnostics } = solveCateringPlan(DEMO_MENU, DEMO_COUPONS, {
+    const menu = await loadRealMenu();
+    const { best, alternatives, diagnostics } = solveCateringPlan(menu, DEMO_COUPONS, {
       headcount,
       budgetPerPerson,
       drinkCountPerPerson: Number(args.drink ?? 1),
@@ -102,7 +110,7 @@ async function main() {
       alternatives,
       input: { headcount, budgetPerPerson, allowSplitOrder: !args['no-split'] },
       priceCheck: null,
-      nutritionEnriched: diagnostics.menuSize,
+      nutritionEnriched: menu.filter((m) => m.kcal > 0).length,
     }));
     console.log(`\n提示：配置 MCD_MCP_TOKEN 后运行 --plan 可接入真实门店菜单与实时价格。\n`);
     return;
@@ -148,7 +156,9 @@ async function main() {
         headcount,
         budgetPerPerson,
         address: args.address,
-        storeName: args.store,
+        city: args.city,
+        storeCode: args['store-code'],
+        beType: args['catering'] ? 6 : 1,
         allowSplitOrder: args['no-split'] ? false : true,
         autoBindCoupons: Boolean(args['auto-bind']),
         excludeAllergens: args['exclude-allergen']

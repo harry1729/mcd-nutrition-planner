@@ -181,6 +181,8 @@ export function parseContent(result) {
   try {
     return JSON.parse(text);
   } catch {
-    return { raw: text };
+    // 非 JSON 文本：部分接口（如 list-nutrition-foods）返回纯文本表格，
+    // 直接返回字符串本身，交给调用方按各自格式解析。
+    return text;
   }
 }
