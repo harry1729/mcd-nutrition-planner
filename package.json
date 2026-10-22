@@ -1,0 +1,25 @@
+{
+  "name": "mcd-catering-planner",
+  "version": "1.0.0",
+  "description": "企业会议/团建聚餐决策助手：基于麦当劳 MCP，在预算、营养、过敏原约束下输出可下单的团餐方案",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "demo": "node src/index.js --demo",
+    "plan": "node src/index.js --plan",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "catering",
+    "constraint-solver",
+    "meal-planning"
+  ],
+  "license": "MIT",
+  "private": false
+}
