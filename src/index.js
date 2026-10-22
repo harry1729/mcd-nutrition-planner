@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * mcd-catering-planner CLI
+ * mcd-nutrition-planner CLI
  *
  * 用法：
  *   npm run demo                    离线演示（无需 Token，用内置样例数据）
@@ -38,7 +38,7 @@ const args = parseArgs(process.argv.slice(2));
 
 function printHelp() {
   console.log(`
-mcd-catering-planner — 企业团餐决策助手
+mcd-nutrition-planner — 团餐营养合规决策助手
 
 用法:
   node src/index.js --demo

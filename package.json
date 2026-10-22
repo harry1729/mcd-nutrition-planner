@@ -1,7 +1,7 @@
 {
-  "name": "mcd-catering-planner",
+  "name": "mcd-nutrition-planner",
   "version": "1.0.0",
-  "description": "企业会议/团建聚餐决策助手：基于麦当劳 MCP，在预算、营养、过敏原约束下输出可下单的团餐方案",
+  "description": "企业会议/团建聚餐营养合规决策助手：基于麦当劳 MCP，在预算、营养下限、钠上限、过敏原约束下输出可下单的团餐方案",
   "type": "module",
   "main": "src/index.js",
   "engines": {

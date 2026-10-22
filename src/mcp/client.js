@@ -120,7 +120,7 @@ export class McdMcpClient {
     const res = await this.#rpc('initialize', {
       protocolVersion: PROTOCOL_VERSION,
       capabilities: { roots: { listChanged: false }, sampling: {} },
-      clientInfo: { name: 'mcd-catering-planner', version: '1.0.0' },
+      clientInfo: { name: 'mcd-nutrition-planner', version: '1.0.0' },
     });
     if (res?.error) throw new Error(`初始化失败：${res.error.message}`);
     await this.#notify('notifications/initialized', {});
