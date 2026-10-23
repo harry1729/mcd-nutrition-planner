@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+/* 公众号封面图：2.35:1 (900x383) */
+body { margin:0; padding:0; width:900px; height:383px; overflow:hidden;
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }
+
+.cover {
+  width:900px; height:383px; position:relative;
+  background:linear-gradient(135deg,#0f6e56 0%,#0a5240 55%,#083f31 100%);
+  color:#fff; overflow:hidden;
+}
+
+/* 装饰：右侧同心圆，弱化不抢焦点 */
+.rings { position:absolute; right:-90px; top:-90px; width:460px; height:460px; }
+.rings span { position:absolute; inset:0; border:1px solid rgba(255,255,255,.09); border-radius:50%; }
+.rings span:nth-child(2){ inset:44px; }
+.rings span:nth-child(3){ inset:88px; }
+.rings span:nth-child(4){ inset:132px; background:rgba(255,255,255,.05); border:none; }
+
+.inner { position:relative; padding:40px 52px; height:100%; display:flex; flex-direction:column; justify-content:center; }
+
+.badge { display:inline-block; align-self:flex-start; font-size:14px;
+  background:rgba(255,255,255,.16); padding:6px 14px; border-radius:20px; margin-bottom:18px; }
+
+h1 { font-size:42px; line-height:1.24; font-weight:700; letter-spacing:-1px; margin-bottom:12px; }
+
+.lead { font-size:19px; opacity:.92; line-height:1.5; margin-bottom:20px; }
+
+.tags { display:flex; gap:10px; }
+.tags span { font-size:15px; background:rgba(255,255,255,.13);
+  padding:7px 14px; border-radius:8px; }
+
+.corner {
+  position:absolute; right:52px; bottom:36px; text-align:right;
+}
+.corner .n { font-size:50px; font-weight:700; line-height:1; color:#7ee0bd; }
+.corner .t { font-size:14px; opacity:.8; margin-top:5px; }
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="rings"><span></span><span></span><span></span><span></span></div>
+  <div class="inner">
+    <div class="badge">小张AI · 麦当劳程序员节参赛作品</div>
+    <h1>20人订午餐人均40<br>让AI算一份"能吃"的清单</h1>
+    <div class="lead">预算不超 · 份数刚好 · 避开忌口 · 钠不超标</div>
+    <div class="tags">
+      <span>真实调用麦当劳MCP</span>
+      <span>107个餐品实测</span>
+      <span>零依赖开源</span>
+    </div>
+  </div>
+  <div class="corner">
+    <div class="n">31.5</div>
+    <div class="t">实测人均（元）</div>
+  </div>
+</div>
+</body>
+</html>

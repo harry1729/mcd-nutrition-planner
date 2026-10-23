@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+/* 公众号正文配图 1：真实运行结果
+   面向职场读者，不放代码，突出"结论 + 可信度" */
+body { margin:0; padding:0; width:375px; overflow:hidden;
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }
+* { box-sizing:border-box; }
+.card { width:375px; background:#faf9f6; padding:26px 22px 26px; }
+
+.h { font-size:20px; font-weight:700; margin-bottom:6px; }
+.h2 { font-size:12.5px; color:#8e8e93; margin-bottom:18px; }
+
+/* 终端 */
+.term { background:#1c1c1e; border-radius:12px; padding:17px 15px;
+  font-family:ui-monospace,Menlo,monospace; margin-bottom:14px; }
+.term .lb { font-size:11px; color:#8e8e93; margin-bottom:10px; }
+.term .main { font-size:16px; color:#30d158; font-weight:600; margin-bottom:4px; }
+.term .sub2 { font-size:12px; color:#e8e6e3; }
+.term .sep { height:1px; background:#38383a; margin:13px 0; }
+.term .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:12px; }
+.term .grid b { display:block; font-size:20px; color:#fff; font-weight:600; }
+.term .grid small { font-size:10px; color:#8e8e93; }
+.term .ok { font-size:11.5px; color:#30d158; }
+
+/* 数据条 */
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:14px; }
+.stats > div { background:#fff; border:1px solid #e5e3dd; border-radius:10px;
+  padding:13px 4px; text-align:center; }
+.stats b { display:block; font-size:22px; color:#0f6e56; font-weight:700; line-height:1.15; }
+.stats small { font-size:10.5px; color:#8e8e93; }
+
+.note { background:#fff; border:1px solid #e5e3dd; border-radius:10px;
+  padding:13px 15px; font-size:12.5px; color:#4a4a4a; line-height:1.65; }
+.note b { color:#1a1a1a; }
+.note .hl { color:#0f6e56; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="h">这是它真实跑出来的结果</div>
+  <div class="h2">2026-10-22 · 深圳某门店 · 20 人 · 人均预算 40 元</div>
+
+  <div class="term">
+    <div class="lb">【推荐方案】</div>
+    <div class="main">芝士安格斯厚牛堡</div>
+    <div class="sub2">20 份 × ¥31.50 = ¥630.00</div>
+    <div class="sep"></div>
+    <div class="grid">
+      <div><b>696</b><small>热量 kcal/人</small></div>
+      <div><b>32</b><small>蛋白质 g/人</small></div>
+      <div><b>897</b><small>钠 mg/人</small></div>
+    </div>
+    <div class="ok">✓ 麦当劳官方计价接口复核：完全一致</div>
+  </div>
+
+  <div class="stats">
+    <div><b>107</b><small>实测餐品</small></div>
+    <div><b>158</b><small>营养条目</small></div>
+    <div><b>45</b><small>单元测试</small></div>
+  </div>
+
+  <div class="note">
+    最后那行 <span class="hl">「计价复核」</span>是关键——
+    我没自己算完钱就输出，而是把方案<b>回传给麦当劳官方计价接口再算一遍</b>，
+    两边对上了才敢给你。<br>
+    <b>不是模拟数据，是真调通了 MCP。</b>
+  </div>
+</div>
+</body>
+</html>

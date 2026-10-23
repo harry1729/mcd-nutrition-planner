@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+/* 公众号文末 Star 引导图
+   核心：降低 GitHub 心理门槛——"不用下载、不用配置、网页直接看" */
+body { margin:0; padding:0; width:375px; overflow:hidden;
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }
+* { box-sizing:border-box; }
+.card { width:375px; background:#fff; padding:28px 24px 30px; }
+
+.h { font-size:21px; font-weight:700; text-align:center; line-height:1.4; margin-bottom:8px; }
+.sub { font-size:13px; color:#767676; text-align:center; line-height:1.6; margin-bottom:20px; }
+
+.qr-wrap { text-align:center; margin-bottom:18px; }
+.qr-box { display:inline-block; background:#fff; padding:12px;
+  border:1px solid #e5e3dd; border-radius:14px; }
+.qr-box img { display:block; width:210px; height:210px; }
+.qr-tip { font-size:11.5px; color:#8e8e93; margin-top:9px; }
+
+.steps { background:#f5f5f7; border-radius:11px; padding:16px 17px; margin-bottom:16px; }
+.steps .st { font-size:12px; color:#8e8e93; margin-bottom:11px; }
+.steps .row { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; }
+.steps .row:last-child { margin-bottom:0; }
+.steps .n { flex-shrink:0; width:19px; height:19px; border-radius:50%;
+  background:#0f6e56; color:#fff; font-size:11px; font-weight:600;
+  display:flex; align-items:center; justify-content:center; margin-top:1px; }
+.steps .tx { font-size:13px; color:#1a1a1a; line-height:1.5; }
+.steps .tx b { font-weight:600; }
+.steps .tx small { display:block; color:#8e8e93; font-size:11.5px; margin-top:1px; }
+
+.cta { background:#0f6e56; color:#fff; border-radius:11px; padding:14px;
+  text-align:center; margin-bottom:13px; }
+.cta .big { font-size:16px; font-weight:700; }
+.cta .sm { font-size:11.5px; opacity:.9; margin-top:3px; }
+
+.addr { font-family:ui-monospace,Menlo,monospace; font-size:11px;
+  color:#0f6e56; text-align:center; word-break:break-all; line-height:1.6; }
+
+.note { font-size:10.5px; color:#8e8e93; text-align:center; margin-top:14px; line-height:1.7; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="h">这个方向，还差你一个 Star</div>
+  <div class="sub">比赛完全按 GitHub Star 数排名<br>没有别的通道</div>
+
+  <div class="qr-wrap">
+    <div class="qr-box"><img src="png/star-qr.png" alt="Star 二维码"></div>
+    <div class="qr-tip">长按识别二维码</div>
+  </div>
+
+  <div class="steps">
+    <div class="st">怎么帮，只要 3 步</div>
+    <div class="row"><div class="n">1</div><div class="tx">长按上面的二维码识别<small>或者点下面绿色地址</small></div></div>
+    <div class="row"><div class="n">2</div><div class="tx">进项目页，点右上角的 ☆ Star<small>首次使用需登录 GitHub，免费</small></div></div>
+    <div class="row"><div class="n">3</div><div class="tx">完成<small>不用下载、不用配置、不用麦当劳账号</small></div></div>
+  </div>
+
+  <div class="cta">
+    <div class="big">★ 不用装任何东西</div>
+    <div class="sm">零依赖 · 45 个测试 · 网页上直接读完全部逻辑</div>
+  </div>
+
+  <div class="addr">github.com/harry1729/mcd-nutrition-planner</div>
+
+  <div class="note">
+    如果你也在接 MCP、或者踩过类似的坑<br>帮忙点个 Star 就是在支持这个方向<br>
+    本项目为参赛作品，非麦当劳官方产品
+  </div>
+</div>
+</body>
+</html>
