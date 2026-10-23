@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<style>
+body { margin:0; padding:0; width:375px; overflow:hidden; }
+
+/* 分享图：微信发图时无法点击跳转，故图内印完整地址，
+   配合文案中的链接双保险。每张 375px 宽，手机截图即可。 */
+
+body { margin:0; padding:0; width:375px; overflow:hidden; }
+
+.card {
+  width: 375px;
+  box-sizing: border-box;
+  box-sizing: border-box; margin: 0 auto 18px; background:#fff; overflow:hidden;
+}
+
+/* ══ A · 主图：痛点 + Star 指引 ══════════ */
+.a { padding:0; }
+.a-top { padding:26px 24px 22px; background:linear-gradient(160deg,#0f6e56 0%,#0a5240 100%); color:#fff; }
+.a-badge { display:inline-block; font-size:11px; background:rgba(255,255,255,.18);
+  padding:4px 10px; border-radius:20px; margin-bottom:14px; }
+.a-top h1 { font-size:27px; line-height:1.32; font-weight:700; letter-spacing:-0.4px; }
+.a-top .q { font-size:15px; opacity:.9; margin-top:9px; line-height:1.55; }
+
+.a-body { padding:20px 24px 22px; }
+.a-res { background:#f5f5f7; border-radius:9px; padding:13px 14px; margin-bottom:16px; }
+.a-res .t { font-size:11px; color:#8e8e93; margin-bottom:7px; }
+.a-res .m { font-size:15px; font-weight:600; color:#0f6e56; }
+.a-res .d { font-size:12px; color:#4a4a4a; margin-top:3px; }
+.a-res .v { font-size:11px; color:#0f6e56; margin-top:7px; padding-top:7px; border-top:1px solid #e0e0e2; }
+
+/* Star 指引 —— 本图重点 */
+.star-box { background:#fff9e8; border:1.5px solid #f0b429; border-radius:11px;
+  padding:15px 16px; margin-bottom:15px; }
+.star-box .sb-h { font-size:11.5px; color:#8a6100; font-weight:600; margin-bottom:10px;
+  letter-spacing:0.3px; }
+.star-step { display:flex; gap:10px; align-items:flex-start; margin-bottom:9px; }
+.star-step:last-of-type { margin-bottom:0; }
+.star-n { flex-shrink:0; width:19px; height:19px; border-radius:50%; background:#f0b429;
+  color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center;
+  justify-content:center; margin-top:1px; }
+.star-c { font-size:13px; color:#5c4400; line-height:1.5; }
+.star-c b { color:#3d2c00; }
+
+/* 地址块 */
+.url {
+  background:#1c1c1e; color:#fff; border-radius:9px; padding:12px 14px; text-align:center;
+}
+.url .lb { font-size:10.5px; color:#8e8e93; margin-bottom:6px; }
+.url .ad {
+  font-family:ui-monospace,Menlo,monospace; font-size:13px; color:#30d158;
+  word-break:break-all; letter-spacing:0.2px; line-height:1.5;
+}
+
+.a-foot { font-size:10.5px; color:#8e8e93; text-align:center; margin-top:13px; line-height:1.65; }
+
+/* ══ B · 对比图 ═══════════════════════════ */
+.b { padding:22px 24px; }
+.b h2 { font-size:19px; font-weight:700; line-height:1.4; margin-bottom:14px; }
+.tb { border:1px solid #e5e3dd; border-radius:9px; overflow:hidden; font-size:12.5px; }
+.tb > div { display:grid; grid-template-columns:4.4em 1fr 1fr; border-bottom:1px solid #e5e3dd; }
+.tb > div:last-child { border-bottom:none; }
+.tb span { padding:9px 8px; display:flex; align-items:center; }
+.tb .h { background:#f5f5f7; color:#767676; font-weight:600; font-size:11px; }
+.tb .h.g { color:#0f6e56; }
+.tb .k { color:#767676; font-size:11px; background:#fafafb; }
+.tb .bad { color:#a32d2d; background:#fcebeb; }
+.tb .warn { color:#854f0b; background:#faeeda; }
+.tb .good { color:#0f6e56; background:#e1f5ee; font-weight:600; }
+.b-note { margin-top:13px; font-size:12.5px; color:#1a1a1a; padding-left:11px;
+  border-left:3px solid #0f6e56; line-height:1.6; }
+.b-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:16px; }
+.b-stats > div { text-align:center; background:#f5f5f7; border-radius:7px; padding:11px 2px; }
+.b-stats b { display:block; font-size:20px; color:#0f6e56; font-weight:700; }
+.b-stats small { font-size:9.5px; color:#8e8e93; }
+
+/* ══ C · 踩坑图 ═══════════════════════════ */
+.c { padding:22px 24px; background:#fafafb; }
+.c h2 { font-size:19px; font-weight:700; margin-bottom:4px; }
+.c .lead { font-size:12px; color:#8e8e93; margin-bottom:14px; }
+.bug { display:flex; gap:9px; background:#fff; border:1px solid #e5e3dd;
+  border-radius:9px; padding:11px 12px; margin-bottom:8px; }
+.bug.hl { border-color:#f0b429; background:#fffdf6; }
+.bug .n { flex-shrink:0; font-size:10px; font-weight:600; color:#767676; background:#f5f5f7;
+  border:1px solid #e5e3dd; border-radius:5px; padding:3px 6px; height:fit-content; white-space:nowrap; }
+.bug.hl .n { color:#8a6100; background:#fdf3d6; border-color:#f0b429; }
+.bug strong { display:block; font-size:13px; margin-bottom:3px; line-height:1.45; }
+.bug p { font-size:11.5px; color:#4a4a4a; line-height:1.5; }
+.bug code { font-family:ui-monospace,Menlo,monospace; font-size:10.5px; background:#f5f5f7;
+  border:1px solid #e5e3dd; border-radius:3px; padding:1px 4px; }
+.mini { margin-top:7px; font-family:ui-monospace,Menlo,monospace; font-size:10.5px;
+  color:#a32d2d; background:#fcebeb; border-radius:5px; padding:7px 9px; line-height:1.5; }
+
+/* ══ D · 收尾图 ═══════════════════════════ */
+.d { padding:24px; text-align:center; background:#fff; }
+.d h2 { font-size:20px; font-weight:700; line-height:1.4; margin-bottom:8px; }
+.d .sub { font-size:12.5px; color:#4a4a4a; margin-bottom:18px; line-height:1.6; }
+.d .btn { display:block; background:#0f6e56; color:#fff; padding:15px; border-radius:11px;
+  font-size:16px; font-weight:700; margin-bottom:14px; }
+.d .btn small { display:block; font-size:11px; font-weight:400; opacity:.9; margin-top:3px; }
+.d .url { margin-bottom:13px; }
+.d .foot { font-size:10px; color:#8e8e93; line-height:1.6; }
+
+</style></head>
+<body><div class="card b">
+  <h2>别的工具只回答「多少钱」<br>这个回答「能不能吃」</h2>
+  <div class="tb">
+    <div><span class="h"></span><span class="h">常见团餐工具</span><span class="h g">这个项目</span></div>
+    <div><span class="k">营养</span><span class="bad">无，或只看热量</span><span class="good">蛋白下限+钠上限</span></div>
+    <div><span class="k">过敏原</span><span class="bad">不涉及</span><span class="good">硬过滤+可追溯</span></div>
+    <div><span class="k">算法</span><span class="warn">启发式粗选</span><span class="good">背包DP，可证最优</span></div>
+    <div><span class="k">目标</span><span class="bad">最便宜</span><span class="good">预算内营养最优</span></div>
+  </div>
+  <div class="b-note">同样预算下，钠 1208mg 的方案会被判为风险项而落选——<br><strong>便宜，不等于能吃。</strong></div>
+  <div class="b-stats">
+    <div><b>107</b><small>实测餐品</small></div>
+    <div><b>158</b><small>营养条目</small></div>
+    <div><b>10</b><small>MCP工具</small></div>
+    <div><b>45</b><small>单元测试</small></div>
+  </div>
+</div></body></html>

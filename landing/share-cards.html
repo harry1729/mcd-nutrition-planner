@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>分享长图生成器</title>
+<style>
+/* 用法：浏览器打开 → 截图保存
+   每个 .shot 是一屏，配合手机滚动截图工具即可导出 */
+
+body {
+  margin: 0;
+  background: #666;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #1a1a1a;
+}
+
+.shot {
+  width: 375px;
+  margin: 0 auto 20px;
+  background: #faf9f6;
+  overflow: hidden;
+}
+
+/* ── 图1：主视觉 + Star 引导 ───────────── */
+.shot-1 { padding: 34px 24px 28px; background: linear-gradient(180deg,#fff,#faf9f6); }
+.shot-1 .tag {
+  display: inline-block; font-size: 11px; color: #0f6e56;
+  background: #e1f5ee; padding: 4px 10px; border-radius: 20px; margin-bottom: 16px;
+}
+.shot-1 h1 { font-size: 30px; line-height: 1.3; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
+.shot-1 .sub { font-size: 14px; color: #4a4a4a; line-height: 1.6; margin-bottom: 20px; }
+.shot-1 .ans {
+  background: #1c1c1e; color: #e8e6e3; border-radius: 10px;
+  padding: 15px; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.75;
+}
+.shot-1 .ans .hl { color: #30d158; font-weight: 600; font-size: 14px; }
+.shot-1 .ans .ok { color: #30d158; font-size: 11.5px; }
+.shot-1 .btn {
+  display: block; text-align: center; background: #0f6e56; color: #fff;
+  padding: 15px; border-radius: 11px; margin-top: 20px;
+  font-size: 16px; font-weight: 600;
+}
+.shot-1 .btn small { display:block; font-size: 11px; font-weight: 400; opacity: 0.85; margin-top: 3px; }
+.shot-1 .foot { font-size: 11px; color: #767676; text-align: center; margin-top: 11px; line-height: 1.6; }
+
+/* ── 图2：差异化对比 ────────────────────── */
+.shot-2 { padding: 28px 24px; background:#fff; border-top: 1px solid #e5e3dd; }
+.shot-2 h2 { font-size: 19px; font-weight: 700; margin-bottom: 14px; line-height: 1.4; }
+.tb { border: 1px solid #e5e3dd; border-radius: 9px; overflow: hidden; font-size: 12.5px; }
+.tb > div { display: grid; grid-template-columns: 4.6em 1fr 1fr; border-bottom: 1px solid #e5e3dd; }
+.tb > div:last-child { border-bottom: none; }
+.tb span { padding: 9px 8px; display: flex; align-items: center; }
+.tb .h { background: #faf9f6; font-weight: 600; color: #767676; font-size: 11.5px; }
+.tb .k { color: #767676; font-size: 11.5px; background: rgba(0,0,0,.015); }
+.tb .bad { color: #a32d2d; background: #fcebeb; }
+.tb .warn { color: #854f0b; background: #faeeda; }
+.tb .good { color: #0f6e56; background: #e1f5ee; font-weight: 600; }
+.shot-2 .note {
+  margin-top: 14px; font-size: 13px; color: #1a1a1a; padding-left: 11px;
+  border-left: 3px solid #0f6e56; line-height: 1.6;
+}
+
+/* ── 图3：踩坑复盘 ──────────────────────── */
+.shot-3 { padding: 28px 24px; background: #faf9f6; border-top: 1px solid #e5e3dd; }
+.shot-3 h2 { font-size: 19px; font-weight: 700; margin-bottom: 6px; }
+.shot-3 .lead { font-size: 13px; color: #767676; margin-bottom: 16px; }
+.b { display: flex; gap: 10px; background: #fff; border: 1px solid #e5e3dd;
+     border-radius: 9px; padding: 12px; margin-bottom: 9px; }
+.b.hl { border-color: #ef9f27; background: #fffdf8; }
+.b .n { flex-shrink: 0; font-size: 10.5px; font-weight: 600; color: #767676;
+        background: #faf9f6; border: 1px solid #e5e3dd; border-radius: 5px;
+        padding: 3px 6px; height: fit-content; white-space: nowrap; }
+.b.hl .n { color: #854f0b; background: #faeeda; border-color: #ef9f27; }
+.b strong { display: block; font-size: 13.5px; margin-bottom: 4px; line-height: 1.45; }
+.b p { font-size: 12px; color: #4a4a4a; line-height: 1.55; }
+.b code { font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+          background: #faf9f6; border: 1px solid #e5e3dd; border-radius: 3px; padding: 1px 4px; }
+.mini { margin-top: 8px; font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+        color: #a32d2d; background: #fcebeb; border-radius: 5px; padding: 8px 10px; line-height: 1.55; }
+
+/* ── 图4：算法 + 收尾CTA ────────────────── */
+.shot-4 { padding: 28px 24px; background:#fff; border-top: 1px solid #e5e3dd; }
+.shot-4 h2 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+.shot-4 .p { font-size: 13px; color: #4a4a4a; margin-bottom: 14px; line-height: 1.6; }
+.al { border: 1px solid #e5e3dd; border-radius: 9px; overflow: hidden; font-size: 12.5px; margin-bottom: 20px; }
+.al > div { display: flex; justify-content: space-between; gap: 8px;
+            padding: 11px 12px; border-bottom: 1px solid #e5e3dd; }
+.al > div:last-child { border-bottom: none; }
+.al .win { background: #e1f5ee; color: #0f6e56; font-weight: 600; }
+.al .note { background: #faf9f6; color: #767676; font-size: 11.5px; }
+.st { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 18px; }
+.st > div { text-align: center; background: #faf9f6; border-radius: 8px; padding: 12px 2px; }
+.st b { display: block; font-size: 22px; color: #0f6e56; font-weight: 700; }
+.st small { font-size: 10px; color: #767676; }
+.shot-4 .btn { display: block; text-align: center; background: #0f6e56; color: #fff;
+               padding: 15px; border-radius: 11px; font-size: 16px; font-weight: 600; }
+.shot-4 .btn small { display:block; font-size: 11px; font-weight: 400; opacity: 0.85; margin-top: 3px; }
+.shot-4 .foot { font-size: 10.5px; color: #767676; text-align: center; margin-top: 10px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- ══ 图1 ══ -->
+<div class="shot shot-1">
+  <div class="tag">1024 程序员节 · 麦当劳创意开发大赛</div>
+  <h1>20人订午餐<br>预算40块/人<br>到底点什么？</h1>
+  <div class="sub">输出一份能直接下单的清单<br>预算不超 · 份数刚好 · 避开忌口 · 钠不超标</div>
+  <div class="ans">
+    <div style="color:#8e8e93;font-size:11.5px">实测 · 深圳某门店 · 20人 / 人均¥40</div>
+    <div class="hl">芝士安格斯厚牛堡 × 20</div>
+    <div>人均 ¥31.50 · 合计 ¥630.00</div>
+    <div style="height:1px;background:#38383a;margin:11px 0"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+      <div><b style="font-size:17px;color:#fff">696</b><br><span style="font-size:10px;color:#8e8e93">kcal/人</span></div>
+      <div><b style="font-size:17px;color:#fff">32</b><br><span style="font-size:10px;color:#8e8e93">蛋白g/人</span></div>
+      <div><b style="font-size:17px;color:#fff">897</b><br><span style="font-size:10px;color:#8e8e93">钠mg/人</span></div>
+    </div>
+    <div class="ok" style="margin-top:11px">✓ 麦当劳官方计价接口复核：完全一致</div>
+  </div>
+  <div class="btn">★ 帮我点个 Star<small>GitHub 榜单按 Star 排名，这是唯一的加分方式</small></div>
+  <div class="foot">截止 10-25 23:59 · 零依赖开源<br>github.com/harry1729/mcd-nutrition-planner</div>
+</div>
+
+<!-- ══ 图2 ══ -->
+<div class="shot shot-2">
+  <h2>别的工具只回答「多少钱」<br>这个回答「能不能吃」</h2>
+  <div class="tb">
+    <div><span class="h"></span><span class="h">常见团餐工具</span><span class="h" style="color:#0f6e56">这个项目</span></div>
+    <div><span class="k">营养约束</span><span class="bad">无，或只看热量</span><span class="good">蛋白下限+钠上限</span></div>
+    <div><span class="k">过敏原</span><span class="bad">不涉及</span><span class="good">硬过滤+可追溯</span></div>
+    <div><span class="k">选品算法</span><span class="warn">启发式粗选</span><span class="good">背包DP，可证最优</span></div>
+    <div><span class="k">目标</span><span class="bad">最便宜</span><span class="good">预算内营养最优</span></div>
+  </div>
+  <div class="note">同样预算下，钠 1208mg 的方案会被判为风险项而落选——<br><strong>便宜，不等于能吃。</strong></div>
+</div>
+
+<!-- ══ 图3 ══ -->
+<div class="shot shot-3">
+  <h2>开发时踩的 4 个坑</h2>
+  <div class="lead">文档里没写、只能自己撞出来的</div>
+  <div class="b">
+    <div class="n">坑 1</div>
+    <div><strong>Token 少一个 Bearer，直接 403</strong>
+    <p>官方示例带 <code>Bearer</code> 前缀，控制台复制出来的不带</p></div>
+  </div>
+  <div class="b">
+    <div class="n">坑 2</div>
+    <div><strong>详情接口根本不返回价格</strong>
+    <p>价格该用 <code>calculate-price</code> 算，含实时优惠。架构改成批量计价</p></div>
+  </div>
+  <div class="b">
+    <div class="n">坑 3</div>
+    <div><strong>营养数据是纯文本，不是 JSON</strong>
+    <p>6000 多行 CSV，描述字段常为 null，JSON 解析器完全没用上</p></div>
+  </div>
+  <div class="b hl">
+    <div class="n">坑 4</div>
+    <div><strong>求解器把 3 元酱料包选成 20 人主食</strong>
+    <p>技术上「最优」，业务上荒谬。加了主食资格判定才修好</p>
+    <div class="mini">· 韩式烟熏芝士风味酱<br>&nbsp;&nbsp;20 份 × ¥3.00 = ¥60.00</div></div>
+  </div>
+</div>
+
+<!-- ══ 图4 ══ -->
+<div class="shot shot-4">
+  <h2>优惠券怎么算最优</h2>
+  <div class="p">单笔订单通常只能用一张券，但拆单能叠加。<br>怎么让每张券都绑定一个真实覆盖门槛的订单？</div>
+  <div class="al">
+    <div><span>贪心（门槛从高到低切）</span><span>100 元</span></div>
+    <div class="win"><span>背包 DP（枚举所有组合）</span><span>125 元</span></div>
+    <div class="note"><span>再拆第 3 单</span><span>需 ≥700 元额度，不可行</span></div>
+  </div>
+  <div class="st">
+    <div><b>107</b><small>实测餐品</small></div>
+    <div><b>158</b><small>营养条目</small></div>
+    <div><b>10</b><small>MCP工具</small></div>
+    <div><b>45</b><small>单元测试</small></div>
+  </div>
+  <div class="btn">★ 帮我点个 Star<small>榜单 100 个项目，营养合规方向还是空的</small></div>
+  <div class="foot">截止 10-25 23:59 · github.com/harry1729/mcd-nutrition-planner<br>本项目为参赛作品，非麦当劳官方产品</div>
+</div>
+
+</body>
+</html>

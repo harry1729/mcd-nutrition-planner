@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+/* 单张分享图：微信长按二维码识别跳转
+   要点：一个二维码 + 一句动作指引，不堆信息 */
+
+body {
+  margin: 0; padding: 0; width: 375px; overflow: hidden;
+  background: #faf9f6;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #1a1a1a;
+}
+
+.card { width: 375px; }
+
+/* 顶部：痛点 */
+.top { padding: 30px 26px 24px; background: linear-gradient(160deg,#0f6e56,#0a5240); color:#fff; }
+.top .badge { display:inline-block; font-size:11px; background:rgba(255,255,255,.18);
+  padding:4px 10px; border-radius:20px; margin-bottom:15px; }
+.top h1 { font-size:28px; line-height:1.3; font-weight:700; letter-spacing:-0.4px; }
+
+/* 中部：结果 */
+.mid { padding: 20px 26px; background:#fff; }
+.res { background:#f5f5f7; border-radius:9px; padding:14px; }
+.res .t { font-size:11px; color:#8e8e93; margin-bottom:8px; }
+.res .m { font-size:17px; font-weight:700; color:#0f6e56; }
+.res .d { font-size:12.5px; color:#4a4a4a; margin-top:4px; }
+.res .v { font-size:11px; color:#0f6e56; margin-top:8px; padding-top:8px; border-top:1px solid #e0e0e2; }
+
+.st { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:12px; }
+.st > div { text-align:center; background:#f5f5f7; border-radius:7px; padding:9px 2px; }
+.st b { display:block; font-size:19px; color:#0f6e56; font-weight:700; }
+.st small { font-size:10px; color:#8e8e93; }
+
+/* 底部：二维码区 */
+.bottom { padding: 24px 26px 28px; background:#fff; }
+
+.howto {
+  display:flex; align-items:center; gap:9px;
+  background:#fff9e8; border:1.5px solid #f0b429; border-radius:10px;
+  padding:12px 14px; margin-bottom:20px;
+}
+.howto .ico { font-size:17px; }
+.howto .tx { font-size:13.5px; color:#5c4400; line-height:1.45; }
+.howto .tx b { color:#3d2c00; }
+
+.qr-wrap { text-align:center; }
+.qr-box {
+  display:inline-block;
+  background:#fff; padding:14px;
+  border:1px solid #e5e3dd; border-radius:14px;
+}
+.qr-box img { display:block; width:260px; height:260px; }
+.qr-label { font-size:11.5px; color:#8e8e93; margin-top:10px; }
+
+.act {
+  margin-top:16px; background:#0f6e56; color:#fff;
+  padding:14px; border-radius:11px; text-align:center;
+}
+.act .big { font-size:16px; font-weight:700; }
+.act .sm { font-size:11.5px; opacity:.9; margin-top:3px; }
+
+.addr { font-family:ui-monospace,Menlo,monospace; font-size:11.5px;
+  color:#0f6e56; text-align:center; margin-top:13px; line-height:1.55;
+  word-break:break-all; }
+
+.foot { font-size:10px; color:#8e8e93; text-align:center; margin-top:14px; line-height:1.65; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="top">
+    <div class="badge">1024 程序员节 · 麦当劳创意开发大赛</div>
+    <h1>20人订午餐<br>预算40块/人<br>到底点什么？</h1>
+  </div>
+
+  <div class="mid">
+    <div class="res">
+      <div class="t">实测 · 深圳某门店 · 20人 / 人均¥40</div>
+      <div class="m">芝士安格斯厚牛堡 × 20</div>
+      <div class="d">人均 ¥31.50 · 蛋白质 32g · 钠 897mg</div>
+      <div class="v">✓ 麦当劳官方计价接口复核：完全一致</div>
+    </div>
+    <div class="st">
+      <div><b>107</b><small>实测餐品</small></div>
+      <div><b>158</b><small>营养条目</small></div>
+      <div><b>45</b><small>单元测试</small></div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="howto">
+      <div class="ico">📱</div>
+      <div class="tx">长按下面的二维码 → <b>识别图中二维码</b> → 进项目页后点右上角 <b>☆ Star</b></div>
+    </div>
+
+    <div class="qr-wrap">
+      <div class="qr-box">
+        <img src="png/star-qr.png" alt="Star 二维码">
+      </div>
+      <div class="qr-label">微信长按识别，不用注册、不用下载</div>
+    </div>
+
+    <div class="act">
+      <div class="big">★ 只要 3 秒</div>
+      <div class="sm">比赛榜单完全按 GitHub Star 排名，这是唯一的加分方式</div>
+    </div>
+
+    <div class="addr">github.com/harry1729/mcd-nutrition-planner</div>
+
+    <div class="foot">
+      截止 10-25 23:59 · 目前榜单 100 个项目，营养合规方向还没人做<br>
+      本项目为参赛作品，非麦当劳官方产品
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

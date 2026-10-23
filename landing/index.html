@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>团餐营养合规助手 · 20人订餐不用再纠结</title>
+<meta name="description" content="输入人数、预算、忌口，输出一份能直接下单的团餐方案。在预算内同时保证蛋白质、钠含量、过敏原。真实调用麦当劳 MCP，107 个餐品实测价格经官方接口复核。">
+<meta property="og:title" content="20人订餐，不用再纠结">
+<meta property="og:description" content="输入人数、预算、忌口，输出能直接下单的团餐方案。开源，零依赖。">
+</head>
+<body>
+
+<header class="hero">
+  <div class="badge">1024 程序员节 · 麦当劳创意开发大赛参赛作品</div>
+  <h1>20 人订午餐<br>预算 40 块/人<br>到底点什么？</h1>
+  <p class="sub">输出一份能直接下单的清单——预算不超、份数刚好、避开忌口、钠不超标</p>
+
+  <div class="cta-wrap">
+    <a class="cta" href="https://github.com/harry1729/mcd-nutrition-planner" target="_blank" rel="noopener">
+      <span class="cta-star">★</span>
+      <span class="cta-text">
+        <strong>帮我点个 Star</strong>
+        <small>GitHub 榜单按 Star 排名，这是唯一的加分方式</small>
+      </span>
+    </a>
+    <p class="cta-hint">3 秒完成 · 排行榜目前 100 个项目，营养合规方向还没人做</p>
+  </div>
+
+  <!-- 登录墙预热：先让对方看懂价值，再去注册 -->
+  <div class="warmup">
+    <div class="warmup-title">没装过 GitHub？30 秒看懂你要点什么</div>
+    <ol class="warmup-steps">
+      <li><b>读到这行字</b><span>说明你已经知道这工具干什么了</span></li>
+      <li><b>右上角点 ☆ Star</b><span>首次使用需登录 GitHub 账号，免费</span></li>
+      <li><b>结束</b><span>不用下载、不用配置、不用麦当劳账号</span></li>
+    </ol>
+    <p class="warmup-note">担心仓库太大看不明白？下面有实测输出和全部源码说明，<b>不需要注册也能先读</b>。</p>
+  </div>
+</header>
+
+<section class="problem">
+  <h2>别的工具只回答「多少钱」<br>这个回答「能不能吃」</h2>
+  <div class="cmp">
+    <div class="cmp-row cmp-head">
+      <span class="cmp-cell"></span>
+      <span class="cmp-cell">常见团餐工具</span>
+      <span class="cmp-cell cmp-mine">这个项目</span>
+    </div>
+    <div class="cmp-row">
+      <span class="cmp-cell">营养约束</span>
+      <span class="cmp-cell cmp-bad">无，或只看热量</span>
+      <span class="cmp-cell cmp-good">蛋白下限 + 钠上限</span>
+    </div>
+    <div class="cmp-row">
+      <span class="cmp-cell">过敏原</span>
+      <span class="cmp-cell cmp-bad">不涉及</span>
+      <span class="cmp-cell cmp-good">硬过滤 + 可追溯</span>
+    </div>
+    <div class="cmp-row">
+      <span class="cmp-cell">选品算法</span>
+      <span class="cmp-cell cmp-warn">启发式粗选</span>
+      <span class="cmp-cell cmp-good">背包 DP，可证最优</span>
+    </div>
+    <div class="cmp-row">
+      <span class="cmp-cell">目标</span>
+      <span class="cmp-cell cmp-bad">最便宜</span>
+      <span class="cmp-cell cmp-good">预算内营养最优</span>
+    </div>
+  </div>
+</section>
+
+<section class="result">
+  <div class="result-label">真实运行结果 · 深圳某门店</div>
+  <div class="terminal">
+    <div class="t-head">20 人 / 人均预算 ¥40.00</div>
+    <div class="t-line t-strong">芝士安格斯厚牛堡 × 20</div>
+    <div class="t-line">人均 ¥31.50 · 合计 ¥630.00</div>
+    <div class="t-sep"></div>
+    <div class="t-grid">
+      <div><b>696</b><small>kcal / 人</small></div>
+      <div><b>32</b><small>蛋白 g / 人</small></div>
+      <div><b>897</b><small>钠 mg / 人</small></div>
+    </div>
+    <div class="t-ok">✓ 麦当劳官方计价接口复核：完全一致</div>
+  </div>
+  <p class="result-note">
+    同样预算下，钠 1208mg 的方案会被判为风险项而落选——<br>
+    <strong>便宜，不等于能吃。</strong>
+  </p>
+</section>
+
+<section class="proof">
+  <div class="stat-row">
+    <div class="stat"><b>107</b><small>实测餐品</small></div>
+    <div class="stat"><b>158</b><small>营养条目</small></div>
+    <div class="stat"><b>10</b><small>MCP 工具</small></div>
+    <div class="stat"><b>45</b><small>单元测试</small></div>
+  </div>
+  <p class="proof-note">全部数据来自麦当劳 MCP 真实返回，价格可逐条核验</p>
+</section>
+
+<section class="story">
+  <h2>开发时踩的 4 个坑</h2>
+  <p class="story-lead">文档里没写、只能自己撞出来的。写出来给后来人省点时间。</p>
+
+  <div class="bug">
+    <div class="bug-tag">坑 1</div>
+    <div class="bug-body">
+      <strong>Token 少一个 Bearer，直接 403</strong>
+      <p>官方示例带 <code>Bearer </code> 前缀，但控制台复制出来的不带。</p>
+    </div>
+  </div>
+
+  <div class="bug">
+    <div class="bug-tag">坑 2</div>
+    <div class="bug-body">
+      <strong>详情接口根本不返回价格</strong>
+      <p>反复试参数才发现——价格该用 <code>calculate-price</code> 算，因为含实时优惠。于是架构从「逐个查详情」改成「批量计价」。</p>
+    </div>
+  </div>
+
+  <div class="bug">
+    <div class="bug-tag">坑 3</div>
+    <div class="bug-body">
+      <strong>营养数据是纯文本，不是 JSON</strong>
+      <p>6000 多行 CSV，<code>描述</code> 字段常为 null。JSON 解析器在这里完全没用上。</p>
+    </div>
+  </div>
+
+  <div class="bug bug-hl">
+    <div class="bug-tag">坑 4</div>
+    <div class="bug-body">
+      <strong>求解器把 3 元酱料包选成 20 人主食</strong>
+      <p>人均 ¥3.00。技术上「最优」——预算内、份数精确、业务上荒谬。加了主食资格判定才修好。</p>
+      <div class="mini-term">· 韩式烟熏芝士风味酱<br>&nbsp;&nbsp;20 份 × ¥3.00 = ¥60.00</div>
+    </div>
+  </div>
+</section>
+
+<section class="tech">
+  <h2>优惠券怎么算最优</h2>
+  <p>单笔订单通常只能用一张券，但拆单能叠加。怎么让每张券都绑定一个真实覆盖门槛的订单？</p>
+  <div class="algo">
+    <div class="algo-row">
+      <span class="algo-name">贪心（门槛从高到低切）</span>
+      <span class="algo-val">100 元</span>
+    </div>
+    <div class="algo-row algo-win">
+      <span class="algo-name">背包 DP（枚举所有组合）</span>
+      <span class="algo-val">125 元</span>
+    </div>
+    <div class="algo-row algo-note">
+      <span class="algo-name">再拆第 3 单</span>
+      <span class="algo-val">需 ≥700 元额度，不可行</span>
+    </div>
+  </div>
+  <p class="algo-foot">第二行是数学上可证的最优解。约束 <code>成本 ≤ 订单小计</code> 杜绝了优惠凭空叠加。</p>
+</section>
+
+<section class="final-cta">
+  <h2>榜单 100 个项目<br>营养合规方向还是空的</h2>
+  <p>如果你关心控钠、忌口、营养均衡，这个方向目前没人做。</p>
+  <a class="cta cta-big" href="https://github.com/harry1729/mcd-nutrition-planner" target="_blank" rel="noopener">
+    <span class="cta-star">★</span>
+    <span class="cta-text">
+      <strong>帮我点个 Star</strong>
+      <small>截止 10-25 23:59，GitHub 按 Star 数排名</small>
+    </span>
+  </a>
+  <p class="cta-hint">零依赖开源 · npm test 就能验证 · 不需要麦当劳账号</p>
+</section>
+
+<footer>
+  <p>本项目为参赛作品，非麦当劳官方产品。价格为采集时点实付价，以官方渠道实时结果为准。</p>
+</footer>
+
+</body>
+</html>
